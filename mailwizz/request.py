@@ -130,7 +130,6 @@ class Request(Base):
         encoded_str = ''
 
         for key in s.keys():
-            print('key', key,urllib.parse.quote_plus(str(s[key])))
             encoded_str += urllib.parse.quote_plus(str(key)) + '=' + urllib.parse.quote_plus(str(s[key])) + '&'
 
         # removing the last &
