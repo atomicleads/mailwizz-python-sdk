@@ -116,15 +116,25 @@ class Request(Base):
         params = {**headers, **client.params_post, **client.params_put, **client.params_delete}
 
         s = OrderedDict()
-        for key in sorted(params, key=str.lower):
+        # putting header to the beginning of the list and sorting alphabetically
+        for key in sorted(headers, key=str.lower):
             s[key] = params[key]
+            
+        # Do not sorting other parameters as we should preserve the order otherwise signing will not work
+        for key in params:
+            if key.startswith('X-MW-'):
+                continue
+            s[key] = params[key]
+
 
         encoded_str = ''
 
         for key in s.keys():
-            encoded_str += urllib.parse.quote(str(key)) + '=' + urllib.parse.quote(str(s[key])) + '&'
+            print('key', key,urllib.parse.quote_plus(str(s[key])))
+            encoded_str += urllib.parse.quote_plus(str(key)) + '=' + urllib.parse.quote_plus(str(s[key])) + '&'
 
-        encoded_str.rsplit('&')
+        # removing the last &
+        encoded_str = encoded_str.rstrip('&')
 
         separator = '?'
         if len(client.params_get) > 0 and '?' in request_url:

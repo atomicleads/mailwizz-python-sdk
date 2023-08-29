@@ -85,7 +85,8 @@ class TransactionalEmails(Base):
             if content is not None:
                 if type(content) is str:
                     content = bytes(content, 'utf-8')
-                data['body'] = base64.b64encode(content)
+                data['body'] = base64.b64encode(content).decode('utf-8') #properly encode the body
+
         except KeyError:
             pass
 
@@ -94,7 +95,7 @@ class TransactionalEmails(Base):
             if archive is not None:
                 if type(archive) is str:
                     archive = bytes(archive, 'utf-8')
-                data['plain_text'] = base64.b64encode(archive)
+                data['plain_text'] = str(base64.b64encode(archive)).decode('utf-8') #properly encode the plain_text
         except KeyError:
             pass
 
